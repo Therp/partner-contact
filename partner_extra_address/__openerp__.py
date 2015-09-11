@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Author: Nicolas Bessi. Copyright Camptocamp SA
+#    Copyright (C) 2015 Therp BV <http://therp.nl>.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -17,37 +17,32 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 {
-    'name': 'Partner first name, last name',
+    'name': 'Partner extra address',
     'description': """
-This module splits first name and last name for non company partners
-====================================================================
+Extra addresses can be added for a company to res_partner. When you have
+multiple invoice or delivery or whatever type addresses, you should be able
+to specify the default, that also should be shown first in selection lists.
 
-The field 'name' becomes a stored function field concatenating lastname and
-firstname
-Note: in version 7.0, installing this module invalidates a yaml test in the
-'edi' module
+The module also offers a compact view that can be used from views that
+have a many2one field to res.partner.
+
+Example for an extra sender_address from sale_order:
 
 Contributors
 ============
-Jonathan Nemry <jonathan.nemry@acsone.eu>
-Olivier Laurent <olivier.laurent@acsone.eu>
+Ronald Portier <ronald@therp.nl>
 
 """,
-    'version': '1.2',
-    'author': 'Camptocamp',
-    'maintainer': 'Camptocamp, Acsone',
+    'version': '8.0.0',
+    'author': 'Therp BV',
+    'maintainer': 'OCA, Therp BV',
     'category': 'Extra Tools',
-    'website': 'http://www.camptocamp.com, http://www.acsone.eu',
+    'website': 'http://www.therp.nl',
     'depends': ['base'],
     'data': [
-        'partner_view.xml',
-        'res_user_view.xml',
+        'view/res_partner.xml',
     ],
-    'demo': [],
-    'test': [],
     'auto_install': False,
     'installable': True,
-    'images': []
 }
