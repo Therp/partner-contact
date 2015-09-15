@@ -27,7 +27,7 @@ class Partner(models.Model):
 
     def _compute_vals(self, vals):
         """Compute vals for create and write"""
-        
+
         def get_val(field, vals, record, m2o=False):
             """Value from screen or from database."""
             if field in vals:
@@ -74,23 +74,22 @@ class Partner(models.Model):
         partners indicated. This has nothing to do with the global default
         address, which is rather the fallback address if an address of the
         desired type can not be found."""
-        parent_id = self.id
+        parent_id = self.parent_id or self.id
         defaults_found = {}
         if parent_id:  # Default makes no sense otherwise
             adr_pref = set(adr_pref or [])
             for type in adr_pref:
                 default_address = self.search([
-                    ('id', '=', parent_id),
+                    ('parent_id', '=', parent_id),
                     ('type', '=', type),
                     ('type_default', '=', True),
                 ])
                 if default_address:
-                    adr_pref.pop(type)
                     defaults_found[type] = default_address.id
         result = super(Partner, self).address_get(adr_pref=adr_pref)
         result.update(defaults_found)
         return result
-    
+
     # ==== Start field definitions
     type_default = fields.Boolean(
         string='Default for address type',
