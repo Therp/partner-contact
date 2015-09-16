@@ -74,7 +74,7 @@ class Partner(models.Model):
         partners indicated. This has nothing to do with the global default
         address, which is rather the fallback address if an address of the
         desired type can not be found."""
-        parent_id = self.parent_id or self.id
+        parent_id = self.parent_id.id or self.id
         defaults_found = {}
         if parent_id:  # Default makes no sense otherwise
             adr_pref = set(adr_pref or [])
@@ -95,4 +95,4 @@ class Partner(models.Model):
         string='Default for address type',
         default=False,
     )
-    # ====== End field definitions
+    # ====== End field definition

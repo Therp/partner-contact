@@ -1,6 +1,34 @@
 <openerp>
     <data>
 
+        <!--Inherit the standard contact popup from 
+            base.view_partner_form and add the default option for the selected 
+            type
+        -->
+        <record model="ir.ui.view" id="res_partner_type_selection_view">
+            <field name="name">res.partner.type.selectionview</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="50"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form[@string='Contact']//field[@name='type']" position="after">
+                    <group>
+                        <field name="type_default" />
+                        <p colspan="4"><i> (Select if this contact will
+                            be the default for the selected type.
+                            Once selected as default the other contacts of this type will 
+                            be reset.)</i>
+                        </p>
+                    </group>
+                </xpath>
+                <xpath expr="//div[@class='oe_module_desc']//table[@class='oe_kanban_table']/tr/td" position="inside">
+                    <div t-if="record.type_default">
+                      <b> Is default for <t t-esc="record.type.value"/></b>
+                    </div>
+               </xpath>
+            </field>
+        </record>
+
         <!-- Address form to use as pop-up from other views to create/edit
              addresses like sender address or delivery address.
              Parent and address type need to be set by the calling form.
