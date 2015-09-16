@@ -21,11 +21,22 @@
                         </p>
                     </group>
                 </xpath>
-                <xpath expr="//div[@class='oe_module_desc']//table[@class='oe_kanban_table']/tr/td" position="inside">
-                    <div t-if="record.type_default">
-                      <b> Is default for <t t-esc="record.type.value"/></b>
-                    </div>
-               </xpath>
+                <xpath expr="//field[@name='child_ids']//field[@name='state_id']" position="after">
+                <field name="type_default"/>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']/kanban//table[@class='oe_kanban_table']/tr/td" position="inside">
+                    <t t-if="record.type_default.raw_value">
+                        <p> <b>
+                            Default <field name="type" readonly="1"/> Address
+                        </b></p>
+                    </t>
+                </xpath>
+
+                <!-- TODO order with default addresses before all others
+                <xpath expr="//field[@name='child_ids']/kanban" position="attributes">
+                    <attribute name="default_group_by">type_default</attribute>
+                </xpath>
+                -->
             </field>
         </record>
 
@@ -49,7 +60,8 @@
                         <field
                             name="type"
                             readonly="True"
-                        />
+                            />
+
                         <field
                             name="name"
                             required="True"
