@@ -1,8 +1,8 @@
 <openerp>
     <data>
 
-        <!--Inherit the standard contact popup from 
-            base.view_partner_form and add the default option for the selected 
+        <!--Inherit the standard contact popup from
+            base.view_partner_form and add the default option for the selected
             type
         -->
         <record model="ir.ui.view" id="res_partner_type_selection_view">
@@ -17,7 +17,7 @@
                         <field name="type_default" />
                         <p colspan="4"><i> (Select if this contact will
                             be the default for the selected type.
-                            Once selected as default the other contacts of this type will 
+                            Once selected as default the other contacts of this type will
                             be reset.)</i>
                         </p>
                     </group>
@@ -54,27 +54,46 @@
             <field name="arch" type="xml">
                 <form string="Address">
                     <group col="4" colspan="6">
-                        <group col="2" colspan="2">
-                            <field name="parent_id" readonly="True"/>
-                            <field name="name" required="True" colspan="4"/>
-                            <field name="contact" colspan="4"/>
-                            <field name="type_default"/>
-                            <field
-                                name="active"
-                                string="Keep address available for reuse"
-                                help="Sets the active flag on the address"
+                        <field name="parent_id" readonly="True"/>
+                        <field name="name" required="True" colspan="4"/>
+                        <field name="contact" colspan="4"/>
+                        <field name="type_default"/>
+                        <field
+                            name="active"
+                            string="Keep address available for reuse"
+                            help="Sets the active flag on the address"
                             />
-                        </group>
-                        <group col="2" colspan="2">
-                            <field name="type" readonly="True"/>
-                            <field name="street" required="True"/>
-                            <field name="zip" />
-                            <field name="city" required="True"/>
-                            <field name="country_id" />
-                            <field name="email" widget="email"/>
-                            <field name="phone"/>
-                            <field name="mobile"/>
-                        </group>
+                        <field
+                            colspan="4"
+                            name="name"
+                            required="True"
+                            />
+                        <field
+                            colspan="4"
+                            name="ref"
+                            />
+                        <field name="type_default"/>
+                        <field
+                            name="street"
+                            required="True"
+                            />
+                        <field name="zip" />
+                        <field
+                            name="city"
+                            required="True"
+                            />
+                        <field name="country_id" />
+                        <field
+                            name="email"
+                            widget="email"
+                            />
+                        <field name="phone"/>
+                        <field name="mobile"/>
+                        <field
+                            name="active"
+                            string="Keep address available for reuse"
+                            help="Sets the active flag on the address"
+                            />
                     </group>
                 </form>
             </field>
