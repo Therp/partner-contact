@@ -53,11 +53,11 @@
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <form string="Address">
-                    <group col="4">
+                    <group col="4" colspan="6">
                         <field name="parent_id" readonly="True"/>
                         <field name="type" readonly="True"/>
-                        <field name="name" required="True"/>
-                        <field name="contact"/>
+                        <field name="name" required="True" colspan="4"/>
+                        <field name="contact" colspan="4"/>
                         <field name="type_default"/>
                         <field name="street" required="True"/>
                         <field name="zip" />
