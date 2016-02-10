@@ -95,4 +95,8 @@ class Partner(models.Model):
         string='Default for address type',
         default=False,
     )
+    contact = fields.Char(
+        string='Contact',
+        help="Contact person or second address line",
+    )
     # ====== End field definition

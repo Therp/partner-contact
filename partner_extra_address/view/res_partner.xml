@@ -13,6 +13,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//form[@string='Contact']//field[@name='type']" position="after">
                     <group>
+                        <field name="contact"/>
                         <field name="type_default" />
                         <p colspan="4"><i> (Select if this contact will
                             be the default for the selected type.
@@ -53,31 +54,14 @@
             <field name="arch" type="xml">
                 <form string="Address">
                     <group col="4">
-                        <field
-                            name="parent_id"
-                            readonly="True"
-                        />
-                        <field
-                            name="type"
-                            readonly="True"
-                            />
-
-                        <field
-                            name="name"
-                            required="True"
-                        />
-                        <field
-                            name="type_default"
-                        />
-                        <field
-                            name="street"
-                            required="True"
-                        />
+                        <field name="parent_id" readonly="True"/>
+                        <field name="type" readonly="True"/>
+                        <field name="name" required="True"/>
+                        <field name="contact"/>
+                        <field name="type_default"/>
+                        <field name="street" required="True"/>
                         <field name="zip" />
-                        <field
-                            name="city"
-                            required="True"
-                        />
+                        <field name="city" required="True"/>
                         <field name="country_id" />
                         <field
                             name="email"
