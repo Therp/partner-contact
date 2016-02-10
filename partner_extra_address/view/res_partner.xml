@@ -54,27 +54,27 @@
             <field name="arch" type="xml">
                 <form string="Address">
                     <group col="4" colspan="6">
-                        <field name="parent_id" readonly="True"/>
-                        <field name="type" readonly="True"/>
-                        <field name="name" required="True" colspan="4"/>
-                        <field name="contact" colspan="4"/>
-                        <field name="type_default"/>
-                        <field name="street" required="True"/>
-                        <field name="zip" />
-                        <field name="city" required="True"/>
-                        <field name="country_id" />
-                        <field
-                            name="email"
-                            widget="email"
-                            colspan="4"
-                        />
-                        <field name="phone"/>
-                        <field name="mobile"/>
-                        <field
-                            name="active"
-                            string="Keep address available for reuse"
-                            help="Sets the active flag on the address"
-                        />
+                        <group col="2" colspan="2">
+                            <field name="parent_id" readonly="True"/>
+                            <field name="name" required="True" colspan="4"/>
+                            <field name="contact" colspan="4"/>
+                            <field name="type_default"/>
+                            <field
+                                name="active"
+                                string="Keep address available for reuse"
+                                help="Sets the active flag on the address"
+                            />
+                        </group>
+                        <group col="2" colspan="2">
+                            <field name="type" readonly="True"/>
+                            <field name="street" required="True"/>
+                            <field name="zip" />
+                            <field name="city" required="True"/>
+                            <field name="country_id" />
+                            <field name="email" widget="email"/>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                        </group>
                     </group>
                 </form>
             </field>
