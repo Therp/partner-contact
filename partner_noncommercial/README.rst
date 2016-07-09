@@ -22,15 +22,21 @@ This module requires no special configuration.
 Usage
 =====
 
-This module changes the Sales main menu to relations. There it gives special
-options to work with persons or organisationss.
+In previous releases of Odoo all partner information, except for suppliers
+was under the Sales menu. IN 9.0 and beyond (presumably) we have the Contacts
+menu, already with filters to slect persons or companies.
+
+Therefore this module is now (for the moment) limited to replace the limited
+term 'Company' with 'Organisation'. It also adds a flag to res.partner to
+distinguish commercial from non-commercial organisations (and propagate this
+attribute to the organisations contacts).
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/partner-contact/8.0
+   :target: https://runbot.odoo-community.org/runbot/partner-contact/9.0
 
 .. repo_id is available in https://github.com/OCA/maintainer-tools/blob/master/tools/repos_with_ids.txt
-.. branch is "8.0" for example
+.. branch is "9.0" for example
 
 Known issues / Roadmap
 ======================
@@ -58,7 +64,8 @@ Credits
 Images
 ------
 
-* Odoo Community Association: `Icon <https://github.com/OCA/maintainer-tools/blob/master/template/module/static/description/icon.svg>`_.
+* Odoo Community Association:
+  `Icon <https://github.com/OCA/maintainer-tools/blob/master/template/module/static/description/icon.svg>`_.
 
 Contributors
 ------------
