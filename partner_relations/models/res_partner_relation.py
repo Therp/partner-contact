@@ -158,6 +158,24 @@ class ResPartnerRelation(models.Model):
             .browse(vals['type_selection_id'])\
             .get_type_from_selection_id()
         vals['type_id'] = type_id
+        # If adding through view with just left_partner_id
+        # and right_partner_id, we have to use those, and not look at
+        # other fields:
+        if 'left_partner_id' in vals or 'right_partner_id' in vals:
+            if is_reverse:
+                left_partner_id = False
+                right_partner_id = False
+                if 'left_partner_id' in vals:
+                    right_partner_id = vals['left_partner_id']
+                    del vals['left_partner_id']
+                if 'right_partner_id' in vals:
+                    left_partner_id = vals['right_partner_id']
+                    del vals['right_partner_id']
+                if left_partner_id:
+                    vals['left_partner_id'] = left_partner_id
+                if right_partner_id:
+                    vals['right_partner_id'] = right_partner_id
+            return vals
         if self._context.get('active_id'):
             if is_reverse:
                 vals['right_partner_id'] = self._context['active_id']
