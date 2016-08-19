@@ -25,15 +25,15 @@
                 >
                     <field
                         name="left_partner_id"
-                        options="{'create': false, 'create_edit': false}"
+                        options="{'no_create': True}"
                     />
                     <field
                         name="type_selection_id"
                         required="True"
-                        options="{'create': false, 'create_edit': false}"/>
+                        options="{'no_create': True}"
                     <field
                         name="right_partner_id"
-                        options="{'create': false, 'create_edit': false}"
+                        options="{'no_create': True}"
                     />
                     <field name="date_start" />
                     <field name="date_end" />
