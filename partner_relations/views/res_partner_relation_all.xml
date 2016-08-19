@@ -8,7 +8,6 @@
                 <tree
                     string="Partner Relations"
                     colors="gray:(date_end and date_end &lt; current_date) or not active;blue:date_start &gt; current_date"
-                    on_write="on_create_write"
                     >
                     <field
                         name="this_partner_id"
@@ -80,7 +79,7 @@
             <field name="name">Relations</field>
             <field name="res_model">res.partner.relation.all</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="tree_res_partner_relation_all"/>
             <field
                 name="search_view_id"
