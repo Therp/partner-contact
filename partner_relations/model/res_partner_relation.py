@@ -20,7 +20,7 @@ class ResPartnerRelation(Model):
     """
     _name = 'res.partner.relation'
     _description = 'Partner relation'
-    _order = 'active desc, date_start desc, date_end desc'
+    _order = 'active desc, type_id, left_partner_id, right_partner_id'
 
     def _correct_vals(self, cr, uid, vals, context=None):
         """Fill type and left and right partner id, according to wether
