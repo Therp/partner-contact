@@ -20,7 +20,7 @@ class ResPartnerRelation(Model):
     """
     _name = 'res.partner.relation'
     _description = 'Partner relation'
-    _order = 'active desc, type_id, left_partner_id, right_partner_id'
+    _order = 'active desc, type_name, left_partner_name, right_partner_name'
 
     def _correct_vals(self, cr, uid, vals, context=None):
         """Fill type and left and right partner id, according to wether
@@ -73,6 +73,9 @@ class ResPartnerRelation(Model):
                 self.date_end and (self.date_end < today))
             # is_relation_future
             values['is_relation_future'] = self.date_start > today
+            values['type_name'] = self.type_id.name
+            values['left_partner_name'] = self.left_partner_id.name
+            values['right_partner_name'] = self.right_partner_id.name
             return values
 
         context = context or {}
@@ -172,6 +175,27 @@ class ResPartnerRelation(Model):
             type='boolean',
             method=True,
             string='Relation is in the future',
+        ),
+        'type_name': fields.function(
+            _get_computed_fields,
+            multi="computed_fields",
+            type='char',
+            store=True,
+            string='Relation type name'
+        ),
+        'left_partner_name': fields.function(
+            _get_computed_fields,
+            multi="computed_fields",
+            type='char',
+            store=True,
+            string='Left partner name'
+        ),
+        'right_partner_name': fields.function(
+            _get_computed_fields,
+            multi="computed_fields",
+            type='char',
+            store=True,
+            string='Right partner name'
         ),
         'active': fields.boolean('Active'),
     }
