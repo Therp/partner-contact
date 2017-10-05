@@ -16,5 +16,5 @@
     'data': [
         'views/base_partner_merge.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
