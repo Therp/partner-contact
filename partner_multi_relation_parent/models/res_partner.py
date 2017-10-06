@@ -50,7 +50,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def write(self, vals):
-        if self.context.get('relation_create'):
+        if self.env.context.get('relation_create'):
             for this in self:
                 if "parent_id" in vals and vals(['parent_id']):
                     this.update_relations(self.parent_id.id, vals['parent_id'])

@@ -77,7 +77,7 @@ class ResPartnerRelation(models.Model):
             'partner_multi_relation_parent.parent_relation_type'
         ).id
         for this in self:
-            if this.type_id != type_relation:
+            if this.type_id.id != type_relation:
                 continue
             this.left_partner_id.with_context(relation_create=False).write(
                 {'parent_id': False}
@@ -107,10 +107,10 @@ class ResPartnerRelation(models.Model):
                 )))
         # there is no relation, so we can create it, but we must update
         # the parent_id of the left contact of this new relation
-        self.left_partner_id.with_context(relation_create=False).write(
-            {'parent_id': vals['left_partner_id']}
-        )
         res = super(ResPartnerRelation, self).create(vals=vals)
+        res.left_partner_id.with_context(relation_create=False).write(
+            {'parent_id': vals['right_partner_id']}
+        )
         return res
 
 

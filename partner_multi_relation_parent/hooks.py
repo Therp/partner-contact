@@ -8,5 +8,7 @@ def post_init_hook(cr, registry):
     partner_model = env['res.partner']
     # get all fields with a parent
     partners = partner_model.search(['!', ('parent_id', 'in', [False])])
+    import pudb
+    pudb.set_trace()
     partners.update_relations()
 
