@@ -1,5 +1,4 @@
-# Copyright 2021 Akretion France (http://www.akretion.com/)
-# @author: Alexis de Lattre <alexis.delattre@akretion.com>
+# Copyright 2021 Akretion France
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
@@ -15,34 +14,40 @@ class ResPartner(models.Model):
         compute_sudo=True,
     )
 
-    @api.depends("email", "company_id")
+    @api.depends(lambda x: x._get_same_email_depends())
     def _compute_same_email_partner_id(self):
+        empty_recordset = self.env[self._name]
         for partner in self:
-            same_email_partner_id = False
-            if partner.email and partner.email.strip():
-                partner_email = partner.email.strip().lower()
-                domain = [("email", "=ilike", "%" + partner_email + "%")]
-                if partner.company_id:
-                    domain += [
-                        "|",
-                        ("company_id", "=", False),
-                        ("company_id", "=", partner.company_id.id),
-                    ]
-                partner_id = partner._origin.id
-                if partner_id:
-                    domain += [
-                        ("id", "!=", partner_id),
-                        "!",
-                        ("id", "child_of", partner_id),
-                        "!",
-                        ("id", "parent_of", partner_id),
-                    ]
-                search_partners = self.with_context(active_test=False).search(domain)
-                for search_partner in search_partners:
-                    if (
-                        search_partner.email
-                        and search_partner.email.strip().lower() == partner_email
-                    ):
-                        same_email_partner_id = search_partner
-                        break
-            partner.same_email_partner_id = same_email_partner_id
+            partner.same_email_partner_id = (
+                partner._find_same_email_partner() if partner.email else empty_recordset
+            )
+
+    def _find_same_email_partner(self):
+        """Find one partner with the same e-mail."""
+        self.ensure_one()
+        domain = self._get_same_email_domain()
+        return self.with_context(active_test=False).search(domain, limit=1)
+
+    @api.model
+    def _get_same_email_depends(self):
+        """Return the fields on which same_email_partner_id depends.
+
+        Return the fields used in _get_same_email_domain function.
+        """
+        return ["email", "company_id"]
+
+    def _get_same_email_domain(self):
+        """Return domain to find partners with same e-mail."""
+        self.ensure_one()
+        email_value = (self.email or "").strip()
+        domain = [("email", "=ilike", email_value)]
+        if self.company_id:
+            domain += [
+                "|",
+                ("company_id", "=", False),
+                ("company_id", "=", self.company_id.id),
+            ]
+        self_id = self._origin.id
+        if self_id:
+            domain.append(("id", "!=", self_id))
+        return domain
