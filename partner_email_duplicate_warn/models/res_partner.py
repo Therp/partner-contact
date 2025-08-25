@@ -36,7 +36,7 @@ class ResPartner(models.Model):
         """
         return ["email", "company_id"]
 
-    def _get_same_email_domain(self):
+    def _get_same_email_domain(self, include_self=False):
         """Return domain to find partners with same e-mail."""
         self.ensure_one()
         email_value = (self.email or "").strip()
@@ -47,7 +47,14 @@ class ResPartner(models.Model):
                 ("company_id", "=", False),
                 ("company_id", "=", self.company_id.id),
             ]
-        self_id = self._origin.id
+        self_id = (self._origin.id or self.id) if not include_self else False
         if self_id:
             domain.append(("id", "!=", self_id))
         return domain
+
+    def _search_same_email_matches_inclusive(self):
+        """Search all records (including self) that satisfy the same-email policy."""
+        self.ensure_one()
+        return self.with_context(active_test=False).search(
+            self._get_same_email_domain(include_self=True)
+        )
