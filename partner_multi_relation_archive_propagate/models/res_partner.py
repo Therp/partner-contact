@@ -1,7 +1,7 @@
 # Copyright 2025 Therp BV
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, models
+from odoo import models
 
 
 class ResPartner(models.Model):
@@ -21,6 +21,14 @@ class ResPartner(models.Model):
                 ]
             )
         )
+
+    def _get_archive_propagation_candidates(self):
+        """Extend archive propagation candidates with propagating relations for companies"""
+        self.ensure_one()
+        res = super()._get_archive_propagation_candidates()
+        if self.is_company:
+            res |= self._get_related_partners_for_archive_propagation()
+        return res - self
 
     def _compute_show_prop_wizard_button(self):
         # Keep original logic (children) and extend for relation-based propagation.
@@ -84,41 +92,3 @@ class ResPartner(models.Model):
                 }
             )
             company._notify_skipped_partners(unarchivable)
-
-    def action_archive_with_contacts(self):
-        """Show wizard also for company partners with propagating relations"""
-        self.ensure_one()
-        # Check if it would archive immediately.
-        # If it is a company, would archive immediately,
-        # and has relation contacts, then
-        # throw wizard
-        descendants = self._get_descendants().filtered(lambda p: p.active)
-        contact_desc = descendants.filtered(lambda p: p.type == "contact")
-        if not contact_desc and self.is_company:
-            related_contacts = (
-                self._get_related_partners_for_archive_propagation().filtered(
-                    lambda p: p.active and p.type == "contact"
-                )
-            )
-            if related_contacts:
-                (
-                    archivable,
-                    unarchivable,
-                ) = related_contacts._split_archivable_unarchivable_user()
-                wiz = self.env["res.partner.archive.propagate.wizard"].create(
-                    {
-                        "partner_id": self.id,
-                        "line_ids": [(0, 0, {"partner_id": p.id}) for p in archivable],
-                    }
-                )
-                self._notify_skipped_partners(unarchivable)
-                return {
-                    "type": "ir.actions.act_window",
-                    "name": _("Archive Contacts"),
-                    "res_model": "res.partner.archive.propagate.wizard",
-                    "view_mode": "form",
-                    "target": "new",
-                    "res_id": wiz.id,
-                }
-        # default to hierarchical wizard or immediate archive
-        return super().action_archive_with_contacts()

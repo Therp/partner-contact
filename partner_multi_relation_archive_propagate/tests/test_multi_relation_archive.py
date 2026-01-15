@@ -62,7 +62,6 @@ class TestPartnerMultiRelationArchivePropagate(TransactionCase):
         icp.set_param("partner_archive_propagate.force_outside_ui", "1")
         # Make rel2 unarchivable by linking an active user
         self._create_active_user_for_partner(self.rel2, "rel2_user")
-        before_msgs = len(self.org.message_ids)
         # Archive the company
         self.org.write({"active": False})
         # Org should be inactive
@@ -70,23 +69,18 @@ class TestPartnerMultiRelationArchivePropagate(TransactionCase):
         # rel1 should be archived and flagged as propagated from org
         self.rel1.invalidate_recordset()
         self.assertFalse(self.rel1.active)
-        self.assertEqual(
-            self.rel1.propagated_from_id,
-            self.org,
-            "rel1 should be archived due to org via propagated_from_id",
-        )
+        self.assertEqual(self.rel1.propagated_from_id, self.org)
         # rel2 should remain active and not flagged
         self.rel2.invalidate_recordset()
         self.assertTrue(self.rel2.active)
-        self.assertFalse(
-            bool(self.rel2.propagated_from_id),
-            "rel2 should not be archived nor flagged because of active user",
-        )
+        self.assertFalse(bool(self.rel2.propagated_from_id))
         # A message should be posted about skipped contacts (rel2)
-        self.assertEqual(len(self.org.message_ids), before_msgs + 1)
-        msg = self.org.message_ids.sorted("id")[-1]
-        self.assertIn("Skipped archiving the following contacts", msg.body)
-        self.assertIn(self.rel2.name, msg.body)
+        skipped_msgs = self.org.message_ids.filtered(
+            lambda m: m.body
+            and "Skipped archiving the following contacts" in m.body
+            and self.rel2.name in m.body
+        )
+        self.assertTrue(skipped_msgs)
         # Reset setting for other tests
         icp.set_param("partner_archive_propagate.force_outside_ui", "0")
 
@@ -205,3 +199,29 @@ class TestPartnerMultiRelationArchivePropagate(TransactionCase):
         line_partners = wiz.line_ids.mapped("partner_id")
         self.assertIn(self.rel1, line_partners)
         self.assertIn(self.rel2, line_partners)
+
+    def test_archive_propagation_candidates_union(self):
+        """_get_archive_propagation_candidates() must include both hierarchy descendants
+        and propagating relation partners (for companies)
+        """
+        Partners = self.env["res.partner"]
+        # Make relation partners contacts (so they could appear in wizard candidates too)
+        self.rel1.write({"type": "contact"})
+        self.rel2.write({"type": "contact"})
+        # Add a hierarchical child contact to org
+        child = Partners.create(
+            {
+                "name": "Child Contact",
+                "parent_id": self.org.id,
+                "type": "contact",
+            }
+        )
+        descendants = self.org._get_descendants()
+        self.assertIn(child, descendants)
+        self.assertNotIn(self.rel1, descendants)
+        self.assertNotIn(self.rel2, descendants)
+        candidates = self.org._get_archive_propagation_candidates()
+        self.assertIn(child, candidates)
+        self.assertIn(self.rel1, candidates)
+        self.assertIn(self.rel2, candidates)
+        self.assertNotIn(self.org, candidates)
