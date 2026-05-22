@@ -2,12 +2,12 @@
     <record id="view_res_config_settings_partner_archive" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.partner.archive</field>
         <field name="model">res.config.settings</field>
-        <!-- use BASE, not base_setup -->
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div
                     class="app_settings_block"
+                    data-string="Partner Archive Propagate"
                     data-key="partner_archive_propagate"
                     string="Partner Archive Propagate"
                 >
